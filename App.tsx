@@ -13,7 +13,7 @@ import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import ApiControlCenter from './components/ApiControlCenter';
 import { Task, ViewType, TaskStatus, UserSettings } from './types';
 import { handleExport } from './services/exportService';
-import { Check, X, Loader2, Database } from 'lucide-react';
+import { Check, X, Loader2, Database, Plus } from 'lucide-react';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
@@ -195,6 +195,20 @@ const App: React.FC = () => {
           )}
         </div>
       </main>
+
+      {/* Botón Flotante de Acceso Rápido */}
+      {currentView !== 'registro' && (
+        <button
+          onClick={() => setCurrentView('registro')}
+          className="fixed bottom-28 right-8 z-[150] bg-correo-yellow text-correo-blue p-5 rounded-full shadow-[0_20px_50px_rgba(255,206,0,0.3)] hover:scale-110 active:scale-95 transition-all group border-4 border-white dark:border-slate-800 flex items-center justify-center"
+          title="Nueva Tarea"
+        >
+          <Plus className="w-8 h-8 stroke-[3]" />
+          <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-correo-blue text-correo-yellow px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 whitespace-nowrap shadow-2xl pointer-events-none border border-white/10">
+            Nueva Tarea
+          </span>
+        </button>
+      )}
 
       <div className="fixed bottom-6 right-6 z-[200] flex flex-col gap-2">
         {notifications.map(n => (
