@@ -11,6 +11,7 @@ import Settings from './components/Settings';
 import Auth from './components/Auth';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import ApiControlCenter from './components/ApiControlCenter';
+import ChatRoom from './components/ChatRoom';
 import { Task, ViewType, TaskStatus, UserSettings } from './types';
 import { handleExport } from './services/exportService';
 import { Check, X, Loader2, Database, Plus } from 'lucide-react';
@@ -178,7 +179,7 @@ const App: React.FC = () => {
             <>
               {currentView === 'dashboard' && (
                 <div className="space-y-12 pb-20">
-                  <Dashboard tasks={tasks} onStatusChange={handleStatusChange} onAddTask={addTask} onEditTask={setEditingTask} userSettings={userSettings} onViewChange={setCurrentView} />
+                  <Dashboard tasks={tasks} onStatusChange={handleStatusChange} onAddTask={addTask} onEditTask={setEditingTask} onDeleteTask={id => setTaskToDelete(tasks.find(t => t.id === id) || null)} userSettings={userSettings} onViewChange={setCurrentView} />
                   <RecentActivity tasks={tasks} onDelete={id => setTaskToDelete(tasks.find(t => t.id === id) || null)} onEdit={setEditingTask} onStatusChange={handleStatusChange} onExport={handleExport} />
                 </div>
               )}
@@ -189,6 +190,7 @@ const App: React.FC = () => {
                 </div>
               )}
               {currentView === 'reportes' && <ExecutiveAudit tasks={tasks} />}
+              {currentView === 'comunicaciones' && <ChatRoom userSettings={userSettings} userId={session.user.id} />}
               {currentView === 'monitoreo' && <ApiControlCenter />}
               {currentView === 'configuracion' && <Settings settings={userSettings} isDarkMode={isDarkMode} onToggleDarkMode={() => setIsDarkMode(!isDarkMode)} onSaveSettings={setUserSettings} onLogout={() => supabase.auth.signOut()} email={session.user.email} />}
             </>

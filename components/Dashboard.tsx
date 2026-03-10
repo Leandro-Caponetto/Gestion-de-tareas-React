@@ -6,7 +6,7 @@ import {
   BarChart2, Calendar, List, Layout, Clock, 
   Target, MoreHorizontal, Users, ExternalLink,
   Table as TableIcon, CalendarDays, Minimize2, Sparkles, Filter as FilterIcon,
-  TestTube2
+  TestTube2, Plus
 } from 'lucide-react';
 import KanbanBoard from './KanbanBoard';
 import DashboardSummary from './DashboardSummary';
@@ -26,6 +26,7 @@ interface DashboardProps {
   onStatusChange?: (id: string, newStatus: TaskStatus) => void;
   onAddTask?: (task: Omit<Task, 'id'>) => void;
   onEditTask?: (task: Task) => void;
+  onDeleteTask?: (id: string) => void;
   userSettings?: UserSettings;
   onViewChange?: (view: any) => void;
 }
@@ -60,7 +61,7 @@ const AvatarStack = ({ userSettings }: { userSettings?: UserSettings }) => {
   );
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ tasks, onStatusChange, onAddTask, onEditTask, userSettings, onViewChange }) => {
+const Dashboard: React.FC<DashboardProps> = ({ tasks, onStatusChange, onAddTask, onEditTask, onDeleteTask, userSettings, onViewChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('timesheet');
   const [timeRange, setTimeRange] = useState<TimeRangeFilter>('all'); 
@@ -151,7 +152,7 @@ const Dashboard: React.FC<DashboardProps> = ({ tasks, onStatusChange, onAddTask,
 
       <div className="flex flex-col md:flex-row md:items-center gap-3 py-2 px-1 mb-1">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">Tablero de Tareas</h2>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">Tablero PMDDW</h2>
           <AvatarStack userSettings={userSettings} />
         </div>
         <div className="flex-1" />
@@ -209,13 +210,21 @@ const Dashboard: React.FC<DashboardProps> = ({ tasks, onStatusChange, onAddTask,
             >
               <BarChart2 className="w-5 h-5" />
             </button>
+
+            <button 
+              onClick={() => onViewChange?.('registro')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-correo-blue text-correo-yellow rounded-lg text-[10px] font-black uppercase tracking-widest h-[40px] hover:bg-correo-blue-light transition-all shadow-lg shadow-correo-blue/20"
+            >
+              <Plus className="w-4 h-4" />
+              Nueva Tarea
+            </button>
           </div>
         </div>
       )}
 
       <div className="mt-1 min-h-[400px]">
         {activeTab === 'summary' && <DashboardSummary tasks={filteredTasks} />}
-        {activeTab === 'kanban' && <KanbanBoard tasks={filteredTasks} onStatusChange={onStatusChange} onAddTask={onAddTask} onEditTask={onEditTask} userSettings={userSettings} />}
+        {activeTab === 'kanban' && <KanbanBoard tasks={filteredTasks} onStatusChange={onStatusChange} onAddTask={onAddTask} onEditTask={onEditTask} onDeleteTask={onDeleteTask} userSettings={userSettings} onViewChange={onViewChange} />}
         {activeTab === 'calendar' && <CalendarView tasks={filteredTasks} />}
         {activeTab === 'timeline' && <TimelineView tasks={filteredTasks} />}
         {activeTab === 'reports' && <ExecutiveAudit tasks={tasks} />}

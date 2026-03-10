@@ -34,4 +34,4 @@ export interface UserSettings {
   employeeId: string;
 }
 
-export type ViewType = 'dashboard' | 'registro' | 'reportes' | 'configuracion' | 'monitoreo';
+export type ViewType = 'dashboard' | 'registro' | 'reportes' | 'configuracion' | 'monitoreo' | 'comunicaciones';
