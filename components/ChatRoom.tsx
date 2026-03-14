@@ -8,6 +8,7 @@ interface Message {
   senderId: string;
   senderName: string;
   senderAvatar?: string;
+  senderSocketId?: string;
   text: string;
   timestamp: number;
   isSystem?: boolean;
@@ -211,6 +212,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userSettings, userId }) => {
       senderId: userId,
       senderName: userSettings.displayName,
       senderAvatar: userSettings.avatarUrl,
+      senderSocketId: socket.id,
       text: inputText,
       timestamp: Date.now()
     };
@@ -303,12 +305,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userSettings, userId }) => {
                 );
               }
               
-              const isMe = msg.senderId === userId;
+              // Primary check: socket ID to distinguish sessions (useful for same-account testing)
+              // Fallback: user ID if socket ID is missing
+              const isMe = msg.senderSocketId ? msg.senderSocketId === socket?.id : msg.senderId === userId;
+              
               return (
                 <div key={msg.id} className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
                   <div className={`flex items-end gap-5 max-w-[80%] ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                     {/* Avatar */}
-                    <div className={`w-14 h-14 rounded-[1.25rem] bg-white dark:bg-slate-800 flex-shrink-0 overflow-hidden border-2 shadow-2xl transition-all hover:scale-110 hover:rotate-3 z-10 ${isMe ? 'border-correo-blue ring-8 ring-correo-blue/5' : 'border-white dark:border-slate-700 ring-8 ring-slate-100 dark:ring-slate-800/50'}`}>
+                    <div className={`w-14 h-14 rounded-[1.25rem] bg-white dark:bg-slate-800 flex-shrink-0 overflow-hidden border-2 shadow-2xl transition-all hover:scale-110 hover:rotate-3 z-10 ${isMe ? 'border-correo-blue ring-8 ring-correo-blue/10' : 'border-white dark:border-slate-700 ring-4 ring-slate-100 dark:ring-slate-800/50'}`}>
                       {msg.senderAvatar ? (
                         <img src={msg.senderAvatar} alt={msg.senderName} className="w-full h-full object-cover" />
                       ) : (
@@ -328,7 +333,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userSettings, userId }) => {
                       <div className={`px-8 py-5 rounded-[2.5rem] text-sm font-medium shadow-2xl transition-all hover:shadow-correo-blue/20 leading-relaxed relative group ${
                         isMe 
                           ? 'bg-gradient-to-br from-correo-blue via-blue-800 to-indigo-900 text-white rounded-br-none' 
-                          : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-100 dark:border-slate-700'
+                          : 'bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-slate-800/95 dark:to-slate-900/90 backdrop-blur-2xl text-slate-800 dark:text-slate-100 rounded-bl-none border border-white/60 dark:border-slate-700/50 ring-1 ring-slate-200/50 dark:ring-slate-800/50 shadow-xl shadow-slate-200/20 dark:shadow-none'
                       }`}>
                         {msg.text}
                         {/* Message Status for "Me" */}
@@ -339,7 +344,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userSettings, userId }) => {
                             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Leído</span>
                           </div>
                         )}
-                        <div className={`absolute bottom-0 ${isMe ? '-right-1.5' : '-left-1.5'} w-6 h-6 ${isMe ? 'bg-indigo-900' : 'bg-white dark:bg-slate-800'} rotate-45 -z-10`}></div>
+                        <div className={`absolute bottom-0 ${isMe ? '-right-1.5' : '-left-1.5'} w-6 h-6 ${isMe ? 'bg-indigo-900' : 'bg-slate-50/90 dark:bg-slate-900/90'} rotate-45 -z-10`}></div>
                       </div>
                     </div>
                   </div>

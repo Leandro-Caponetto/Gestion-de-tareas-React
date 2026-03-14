@@ -12,6 +12,7 @@ import Auth from './components/Auth';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import ApiControlCenter from './components/ApiControlCenter';
 import ChatRoom from './components/ChatRoom';
+import AIChatBot from './components/AIChatBot';
 import { Task, ViewType, TaskStatus, UserSettings } from './types';
 import { handleExport } from './services/exportService';
 import { Check, X, Loader2, Database, Plus } from 'lucide-react';
@@ -226,6 +227,15 @@ const App: React.FC = () => {
 
       {editingTask && <TaskDetailModal task={editingTask} onClose={() => setEditingTask(null)} onSave={updateTask} onDelete={id => { setEditingTask(null); setTaskToDelete(tasks.find(t => t.id === id) || null); }} />}
       <DeleteConfirmationModal isOpen={!!taskToDelete} onClose={() => setTaskToDelete(null)} onConfirm={() => taskToDelete && deleteTask(taskToDelete.id)} taskTitle={taskToDelete?.proyecto || ''} />
+      
+      {/* Asistente IA Flotante */}
+      <AIChatBot 
+        tasks={tasks} 
+        onStatusChange={handleStatusChange} 
+        onAddTask={addTask}
+        userEmail={session.user.email} 
+        userSettings={userSettings}
+      />
     </div>
   );
 };
