@@ -13,6 +13,7 @@ import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import ApiControlCenter from './components/ApiControlCenter';
 import ChatRoom from './components/ChatRoom';
 import AIChatBot from './components/AIChatBot';
+import AutomationBuilder from './components/AutomationBuilder';
 import { Task, ViewType, TaskStatus, UserSettings } from './types';
 import { handleExport } from './services/exportService';
 import { Check, X, Loader2, Database, Plus } from 'lucide-react';
@@ -167,10 +168,12 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-      <Sidebar currentView={currentView} onViewChange={setCurrentView} userSettings={userSettings} />
+      {currentView !== 'automatizacion' && (
+        <Sidebar currentView={currentView} onViewChange={setCurrentView} userSettings={userSettings} />
+      )}
       
-      <main className="flex-1 ml-64 p-6 lg:p-10 min-w-0">
-        <div className="max-w-[1400px] mx-auto">
+      <main className={`flex-1 ${currentView === 'automatizacion' ? 'ml-0' : 'ml-64'} ${currentView === 'automatizacion' ? 'p-0' : 'p-6 lg:p-10'} min-w-0`}>
+        <div className={currentView === 'automatizacion' ? 'w-full h-full' : 'max-w-[1400px] mx-auto'}>
           {loading ? (
             <div className="flex flex-col items-center justify-center h-full py-40">
               <div className="w-12 h-12 border-4 border-correo-yellow border-t-correo-blue rounded-full animate-spin"></div>
@@ -193,6 +196,13 @@ const App: React.FC = () => {
               {currentView === 'reportes' && <ExecutiveAudit tasks={tasks} />}
               {currentView === 'comunicaciones' && <ChatRoom userSettings={userSettings} userId={session.user.id} />}
               {currentView === 'monitoreo' && <ApiControlCenter />}
+              {currentView === 'automatizacion' && (
+                <AutomationBuilder 
+                  onBack={() => setCurrentView('dashboard')} 
+                  tasks={tasks}
+                  userEmail={session?.user?.email || "caponettopeppers@gmail.com"}
+                />
+              )}
               {currentView === 'configuracion' && <Settings settings={userSettings} isDarkMode={isDarkMode} onToggleDarkMode={() => setIsDarkMode(!isDarkMode)} onSaveSettings={setUserSettings} onLogout={() => supabase.auth.signOut()} email={session.user.email} />}
             </>
           )}

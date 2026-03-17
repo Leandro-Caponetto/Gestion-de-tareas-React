@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, ClipboardList, BarChart3, Settings, LogOut, User, Cpu, Plus, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, BarChart3, Settings, LogOut, User, Cpu, Plus, MessageSquare, Zap } from 'lucide-react';
 import { ViewType, UserSettings } from '../types';
 import { supabase } from '../lib/supabaseClient';
 import logo from '../assets/unnamed.png';
@@ -17,16 +17,17 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange, userSettin
     { id: 'registro', label: 'Carga de Tareas', icon: ClipboardList },
     { id: 'comunicaciones', label: 'Comunicaciones', icon: MessageSquare },
     { id: 'reportes', label: 'Reportes / IA', icon: BarChart3 },
+    { id: 'automatizacion', label: 'Automatización', icon: Zap },
     { id: 'monitoreo', label: 'API Control', icon: Cpu },
     { id: 'configuracion', label: 'Configuración', icon: Settings },
   ];
 
   return (
-    <aside className="w-64 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed left-0 top-0 transition-colors duration-300 z-50">
+    <aside className="w-64 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed left-0 top-0 transition-colors duration-300 z-50 overflow-y-auto scrollbar-hide">
       <div className="p-8">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="bg-correo-yellow p-4 rounded-3xl flex items-center justify-center shadow-lg shadow-correo-yellow/20">
-           <img 
+                   <img 
   src={logo} 
   alt="Correo Logo" 
   className="w-16 h-16"
